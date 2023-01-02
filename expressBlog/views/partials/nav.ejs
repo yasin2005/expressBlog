@@ -1,0 +1,18 @@
+<nav>
+  <div class="site-title">
+    <a href="/"><h1>Express Blog</h1></a>
+    <p>A Node.js Project</p>
+  </div>
+  <ul>
+    <% if (user) { %>
+    <li>Welcome, <%= user.email %></li>
+    <li><a href="/blogs">Blogs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/blogs/create">New Blog</a></li>
+    <li><a href="/logout">Log Out</a></li>
+    <% } else { %>
+    <li><a href="/signup" class="btn">Sign Up</a></li>
+    <li><a href="/login">Log In</a></li>
+    <% } %>
+  </ul>
+</nav>

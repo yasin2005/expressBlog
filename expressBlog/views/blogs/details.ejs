@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <%- include('../partials/nav.ejs') %>
+
+    <div class="details content">
+      <h2><%= blog.title %></h2>
+      <div class="content">
+        <p><%= blog.body %></p>
+      </div>
+      <a class="delete" data-doc="<%= blog._id %>">
+        <img src="/trashcan.svg" alt="Delete-Icon" />
+      </a>
+      <a class="update" data-doc="<%= blog._id %>">
+        <img src="/pencil-solid.svg" alt="Update-Icon" />
+      </a>
+    </div>
+    <div class="popup-mask">
+      <section class="popup">
+        <div class="popup-close">x</div>
+        <form action="/blogs/<%= blog._id %>?_method=PUT" method="POST">
+          <label for="title">Blog Title:</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value="<%= blog.title %>"
+            required
+          />
+          <label for="snippet">Blog Snippet:</label>
+          <input
+            type="text"
+            id="snippet"
+            name="snippet"
+            value="<%= blog.snippet %>"
+            required
+          />
+          <label for="body">Blog Body</label>
+          <textarea id="body" name="body" cols="33" required></textarea>
+          <button>Submit</button>
+        </form>
+      </section>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+    <script>
+      const trashcan = document.querySelector("a.delete");
+      const pencil = document.querySelector("a.update");
+      const popup = document.querySelector(".popup-mask");
+      const close = document.querySelector(".popup-close");
+      const body = document.querySelector("textarea");
+      const form = document.querySelector("form");
+      const button = document.querySelector("button");
+      //delete
+      trashcan.addEventListener("click", (e) => {
+        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+        fetch(endpoint, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            window.location.href = data.redirect;
+          })
+          .catch((err) => console.log(err));
+      });
+      button.addEventListener("click", (e) => {
+        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+        fetch(endpoint, {
+          method: "PUT",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            window.location.href = data.redirect;
+          })
+          .catch((err) => console.log(err));
+      });
+      //popup
+      pencil.addEventListener("click", (e) => {
+        popup.style.display = "block";
+        body.innerHTML = "<%= blog.body %>";
+      });
+
+      close.addEventListener("click", (e) => {
+        popup.style.display = "none";
+      });
+      popup.addEventListener("click", (e) => {
+        if (e.target.tagName === "DIV") {
+          popup.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>
